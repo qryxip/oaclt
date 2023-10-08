@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/oadef", "crates/oadef_macros"]
+resolver = "2"
