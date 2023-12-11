@@ -6,7 +6,7 @@ use std::{
     slice,
 };
 
-use derive_more::Into;
+use derive_more::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Into, Not};
 use duplicate::duplicate_item;
 use thiserror::Error;
 use windows::{
@@ -15,8 +15,9 @@ use windows::{
         Foundation::VARIANT_BOOL,
         System::{
             Com::{
-                CLSIDFromProgID, CoCreateInstance, IDispatch, CLSCTX_ALL, DISPATCH_METHOD,
-                DISPATCH_PROPERTYGET, DISPATCH_PROPERTYPUT, DISPPARAMS, SAFEARRAY,
+                CLSIDFromProgID, CoCreateInstance, CoInitializeEx, CoUninitialize, IDispatch,
+                CLSCTX_ALL, COINIT, COINIT_APARTMENTTHREADED, COINIT_MULTITHREADED,
+                DISPATCH_METHOD, DISPATCH_PROPERTYGET, DISPATCH_PROPERTYPUT, DISPPARAMS, SAFEARRAY,
             },
             Ole::{SafeArrayCreateVector, SafeArrayPutElement},
             Variant::{
@@ -29,6 +30,41 @@ use windows::{
 };
 
 pub use oadef_macros::{new, TryFrom_Out};
+
+pub fn init_apartment(dwcoinit: Coinit) -> windows::core::Result<CoUninitializeOnDrop> {
+    unsafe {
+        // SAFETY: according to com-rs, this function is safe as long as the first argument is
+        // null?
+        CoInitializeEx(None, COINIT(dwcoinit.0))
+    }?;
+    Ok(CoUninitializeOnDrop)
+}
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Not, BitAnd, BitAndAssign, BitOr, BitOrAssign)]
+pub struct Coinit(i32);
+
+impl Coinit {
+    pub const MULTITHREADED: Self = Self(COINIT_MULTITHREADED.0);
+    pub const APARTMENTTHREADED: Self = Self(COINIT_APARTMENTTHREADED.0);
+}
+
+impl Default for Coinit {
+    fn default() -> Self {
+        Self::MULTITHREADED
+    }
+}
+
+#[must_use]
+pub struct CoUninitializeOnDrop;
+
+impl Drop for CoUninitializeOnDrop {
+    fn drop(&mut self) {
+        unsafe {
+            // SAFETY: according to com-rs, this function itself is safe?
+            CoUninitialize();
+        }
+    }
+}
 
 pub fn idispatch_from_prog_id(lpszprogid: PCWSTR) -> windows::core::Result<IDispatch> {
     let clsid = unsafe {
