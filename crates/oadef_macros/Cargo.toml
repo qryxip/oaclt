@@ -8,3 +8,9 @@ rust-version = "1.73.0"
 
 [lib]
 proc-macro = true
+
+[dependencies]
+itertools = "0.11.0"
+proc-macro2 = "1.0.69"
+quote = "1.0.33"
+syn = "2.0.38"
