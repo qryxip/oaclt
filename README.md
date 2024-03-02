@@ -1,3 +1,3 @@
-# oadef
+# OleClient
 
-Provides a macro to wrap `IDispatch`.
+OLE Automation client.
