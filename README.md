@@ -1,3 +1,3 @@
-# OleClient
+# oaclt
 
-OLE Automation client.
+An **O**LE **A**utomation **cl**ien**t** for Rust.

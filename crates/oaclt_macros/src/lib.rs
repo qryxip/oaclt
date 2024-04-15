@@ -5,7 +5,7 @@ use syn::{
     parse_macro_input, DeriveInput, LitStr, Meta, MetaList, Token,
 };
 
-#[proc_macro_derive(new, attributes(oleclient))]
+#[proc_macro_derive(new, attributes(oaclt))]
 pub fn derive_new(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     return derive_new(input)
@@ -20,22 +20,22 @@ pub fn derive_new(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
         let AttrVal(prog_id) = attrs
             .iter()
             .flat_map(|attr| match &attr.meta {
-                Meta::List(MetaList { path, .. }) if path.is_ident("oleclient") => {
+                Meta::List(MetaList { path, .. }) if path.is_ident("oaclt") => {
                     Some(attr.parse_args::<AttrVal>())
                 }
                 _ => None,
             })
             .exactly_one()
             .map_err(|_| {
-                syn::Error::new(proc_macro2::Span::call_site(), "missing `#[oleclient(…)]`")
+                syn::Error::new(proc_macro2::Span::call_site(), "missing `#[oaclt(…)]`")
             })??;
 
         let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
         Ok(quote! {
             impl #impl_generics #ident #ty_generics #where_clause {
-                #vis fn new() -> ::oleclient::Result<Self> {
-                    let disp = ::oleclient::idispatch_from_prog_id(::windows::core::w!(#prog_id))?;
+                #vis fn new() -> ::oaclt::Result<Self> {
+                    let disp = ::oaclt::idispatch_from_prog_id(::windows::core::w!(#prog_id))?;
                     Ok(::std::convert::From::from(disp))
                 }
             }
@@ -73,12 +73,12 @@ pub fn derive_try_from_out(input: proc_macro::TokenStream) -> proc_macro::TokenS
         let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
         Ok(quote! {
-            impl #impl_generics ::std::convert::TryFrom<::oleclient::Out> for #ident #ty_generics
+            impl #impl_generics ::std::convert::TryFrom<::oaclt::Out> for #ident #ty_generics
             #where_clause
             {
-                type Error = ::oleclient::Error;
+                type Error = ::oaclt::Error;
 
-                fn try_from(out: ::oleclient::Out) -> ::oleclient::Result<Self> {
+                fn try_from(out: ::oaclt::Out) -> ::oaclt::Result<Self> {
                     let disp = out.into_idispatch()?;
                     Ok(Self::from(disp))
                 }
