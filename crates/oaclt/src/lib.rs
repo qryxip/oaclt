@@ -29,7 +29,7 @@ use windows::{
     },
 };
 
-pub use oleclient_macros::{new, TryFrom_Out};
+pub use oaclt_macros::{new, TryFrom_Out};
 
 pub fn init_apartment(dwcoinit: Coinit) -> windows::core::Result<CoUninitializeOnDrop> {
     unsafe {

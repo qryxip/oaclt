@@ -53,18 +53,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "oleclient"
+name = "oaclt"
 version = "0.0.0"
 dependencies = [
  "derive_more",
  "duplicate",
- "oleclient_macros",
+ "oaclt_macros",
  "thiserror",
  "windows",
 ]
 
 [[package]]
-name = "oleclient_macros"
+name = "oaclt_macros"
 version = "0.0.0"
 dependencies = [
  "itertools",
