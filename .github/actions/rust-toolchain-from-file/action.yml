@@ -1,3 +1,6 @@
+name: rustup toolchain install from file
+description: Install the Rust toolchain from a rust-toolchain file
+
 inputs:
   targets:
     required: false
