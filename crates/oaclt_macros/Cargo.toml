@@ -4,13 +4,13 @@ version = "0.0.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 publish = false
-rust-version = "1.73.0"
+rust-version = "1.81.0"
 
 [lib]
 proc-macro = true
 
 [dependencies]
 itertools = "0.11.0"
-proc-macro2 = "1.0.69"
-quote = "1.0.33"
-syn = "2.0.38"
+proc-macro2 = "1.0.86"
+quote = "1.0.37"
+syn = "2.0.79"
