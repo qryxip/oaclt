@@ -7,13 +7,13 @@ publish = false
 rust-version = "1.81.0"
 
 [dependencies]
-derive_more = "0.99.18"
-duplicate = "1.0.0"
+derive_more = "2.1.1"
+duplicate = "2.0.1"
 oaclt_macros = { path = "../oaclt_macros" }
-thiserror = "1.0.64"
+thiserror = "2.0.20"
 
 [dependencies.windows]
-version = "0.51.1"
+version = "0.62.2"
 features = [
     "Win32_Foundation",
     "Win32_System_Com",
